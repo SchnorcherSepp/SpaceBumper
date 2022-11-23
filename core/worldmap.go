@@ -32,36 +32,13 @@ type WorldMap struct {
 	players []*Ship // all players (alive and dead)
 }
 
-// LoadWorldMap loads the map file '{mapName}.txt' from the local directory or the 'maps' subdirectory.
-// The Order is './*' then './maps/*' then '../maps/*' and then '../../maps/*'.
+// NewWorldMap returnd a new WorldMap.
 //
 // The map is defined with characters in a text file. Each character is a cell (see CellTypes).
 // The chars are the columns, the lines are the rows of the grid.
 // All lines must contain the same number of characters.
 // Each line must end with the character '|'.
-func LoadWorldMap(mapName string, endtime uint64) (*WorldMap, error) {
-
-	// search map file
-	if !strings.HasSuffix(strings.ToLower(mapName), ".txt") {
-		mapName += ".txt"
-	}
-	paths := []string{mapName, "maps/" + mapName, "../maps/" + mapName, "../../maps/" + mapName}
-	for _, p := range paths {
-		_, e := os.Stat(p)
-		if e == nil {
-			mapName = p
-			break
-		}
-	}
-
-	// read file
-	b, err := os.ReadFile(mapName)
-	if err != nil {
-		return nil, err
-	}
-
-	// remove utf8 magic bytes
-	b = bytes.ReplaceAll(b, []byte{0xef, 0xbb, 0xbf}, []byte{})
+func NewWorldMap(b []byte, endtime uint64) (*WorldMap, error) {
 
 	// split lines
 	s := strings.ReplaceAll(string(b), "\r", "") // remove '\r'
@@ -122,13 +99,48 @@ func LoadWorldMap(mapName string, endtime uint64) (*WorldMap, error) {
 	return wm, nil
 }
 
+// LoadWorldMap loads the map file '{mapName}.txt' from the local directory or the 'maps' subdirectory.
+// The Order is './*' then './maps/*' then '../maps/*' and then '../../maps/*'.
+//
+// The map is defined with characters in a text file. Each character is a cell (see CellTypes).
+// The chars are the columns, the lines are the rows of the grid.
+// All lines must contain the same number of characters.
+// Each line must end with the character '|'.
+func LoadWorldMap(mapName string, endtime uint64) (*WorldMap, error) {
+
+	// search map file
+	if !strings.HasSuffix(strings.ToLower(mapName), ".txt") {
+		mapName += ".txt"
+	}
+	paths := []string{mapName, "maps/" + mapName, "../maps/" + mapName, "../../maps/" + mapName}
+	for _, p := range paths {
+		_, e := os.Stat(p)
+		if e == nil {
+			mapName = p
+			break
+		}
+	}
+
+	// read file
+	b, err := os.ReadFile(mapName)
+	if err != nil {
+		return nil, err
+	}
+
+	// remove utf8 magic bytes
+	b = bytes.ReplaceAll(b, []byte{0xef, 0xbb, 0xbf}, []byte{})
+
+	// return new world
+	return NewWorldMap(b, endtime)
+}
+
 //--------  Getter  --------------------------------------------------------------------------------------------------//
 
 // Stats returns
 //
-//	iteration the current iteration
-//  endtime is the max. iteration
-//	maxUpdateTime the longest running time of the Update() function.
+//		iteration the current iteration
+//	 endtime is the max. iteration
+//		maxUpdateTime the longest running time of the Update() function.
 func (m *WorldMap) Stats() (iteration, endtime uint64, maxUpdateTime time.Duration) {
 	return m.iteration, m.endtime, m.maxUpdateTime
 }
