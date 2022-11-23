@@ -1,6 +1,6 @@
 # SpaceBumper
 
-CloudWars is a GO implementation of the
+SpaceBumper is a GO implementation of the
 Gathering [Hardcore Programming Compo case 2012](https://archive.gathering.org/tg12/en/creative/competitions/hardcore-programming-competition/hardcore-programming-compo-case/)
 . This implementation offers more configuration options, a larger game board and the server-client protocol has been
 changed.
