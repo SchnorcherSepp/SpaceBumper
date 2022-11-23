@@ -1,0 +1,8 @@
+	None    = ' '
+	Blocked = '#'
+	Boost   = 'b'
+	Slow    = 's'
+	Tile    = '.'
+	Star    = 'x'
+	Anti    = 'a'
+	Spawn   = 'o'
