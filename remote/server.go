@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/textproto"
+	"os"
 	"strings"
 	"sync"
 )
@@ -69,6 +70,12 @@ func handleRequest(conn net.Conn, ser *server) {
 
 	// read first line (ended with \n or \r\n)
 	line, _ := tp.ReadLine()
+
+	// EXIT
+	if line == "EXIT" {
+		fmt.Printf("EXIT by %v\n", conn.RemoteAddr())
+		os.Exit(0)
+	}
 
 	// vars
 	var retMsg = ""
