@@ -25,7 +25,7 @@ func main() {
 	player := flag.String("player", "2", "how many players to wait for; needs remote=true")
 
 	// local player settings
-	localPly := flag.Bool("local", true, "enable local game with mouse; needs headless=false")
+	noLocalPly := flag.Bool("no-local", false, "disable local game with mouse; local game needs headless=false")
 	localName := flag.String("name", "Local Player", "your local player name; needs local=true")
 	localColor := flag.String("color", "blue", "your local player color; needs local=true")
 
@@ -62,7 +62,7 @@ func main() {
 	}
 
 	// add local player
-	if *localPly {
+	if !*noLocalPly {
 		_, err = world.AddPlayer(*localName, *localColor, nil)
 		if err != nil {
 			panic(err)
