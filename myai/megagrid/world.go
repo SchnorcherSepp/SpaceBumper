@@ -64,6 +64,11 @@ func (w *WorldMap) UpdateStars(playerName string) {
 	// find best star
 	for _, star := range w.MGrid.Stars() {
 		d := w.MGrid.AStar(myPos, star)
+		sts := w.starCluster(star)
+		if sts > 50 {
+			println("cluster", sts, star.xCol, star.yRow)
+			d -= sts * 50
+		}
 		if d < bestD {
 			bestD = d
 			bestS = star
@@ -73,4 +78,23 @@ func (w *WorldMap) UpdateStars(playerName string) {
 	// set best star and calc path
 	w.MGrid.AStar(myPos, bestS)
 	w.NextStar = bestS
+}
+
+func (w *WorldMap) starCluster(star *Cell) int {
+	x := star.XCol()
+	y := star.YRow()
+
+	sts := 0
+
+	for tmpX := x - 12; tmpX < x+12; tmpX++ {
+		for tmpY := y - 12; tmpY < y+12; tmpY++ {
+			if !w.MGrid.OutOfBound(tmpX, tmpY) {
+				if w.MGrid[tmpX][tmpY].cType == Star {
+					sts++
+				}
+			}
+		}
+	}
+
+	return sts
 }
