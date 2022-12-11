@@ -86,7 +86,7 @@ func (g *Game) Update() error {
 	// player control
 	id := 0
 	ship, err := g.world.Player(id)
-	if err == nil && ship.IsAlive() {
+	if err == nil && ship.IsAlive() && ship.Remote() == nil {
 		// keys
 		if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 			// cursor position
