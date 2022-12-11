@@ -3,6 +3,7 @@ package main
 import (
 	"SpaceBumper/core"
 	"SpaceBumper/gui"
+	"SpaceBumper/myai/ai"
 	"SpaceBumper/remote"
 	"flag"
 	"os"
@@ -10,9 +11,12 @@ import (
 	"time"
 )
 
-const VERSION = "1.0b"
+const VERSION = "1.1"
 
 func main() {
+
+	// AI
+	aiMode := flag.Bool("ai", false, "start program as ai client")
 
 	// world settings
 	mapName := flag.String("map", "map1", "the name of the player map")
@@ -45,6 +49,11 @@ func main() {
 	}
 
 	//------------------------------------------------------------------------------
+
+	if *aiMode {
+		ai.RunAI(*srvAddr, *srvPort)
+		os.Exit(0)
+	}
 
 	// create world
 	world, err := core.LoadWorldMap(*mapName, *endtime)
